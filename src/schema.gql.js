@@ -42,7 +42,6 @@ module.exports = typeDefs = gql`
   }
 
   input UserSigninInput {
-    username: String!
     email: String!
     password: String!
   }
