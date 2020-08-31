@@ -9,6 +9,5 @@
 - GraphQL Tools
 
 # TODOS
-- Add Primsma 2 SQL Database
-- Finish adding all resolvers
-- Finish business logic for Rooms, Messages, Users.
+- Authenticate message subscription
+- Add type for messages "admin" and "user"
