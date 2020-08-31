@@ -6,6 +6,7 @@ module.exports = gql`
     username: String!
     email: String!
     password: String!
+    createdAt: String!
   }
 
   type AuthPayload {
@@ -22,8 +23,12 @@ module.exports = gql`
     password: String!
   }
 
+  input UserByIdInput {
+    id: String!
+  }
+
   type Query {
-    user: User
+    user(input: UserByIdInput!): User
     users: [User]!
   }
 

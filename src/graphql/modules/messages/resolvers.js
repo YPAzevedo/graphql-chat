@@ -2,8 +2,6 @@ const { withFilter } = require('apollo-server');
 
 const { NEW_MESSAGE } = require('../../subscription.channels');
 
-const messages = [];
-
 module.exports = {
   Subscription: {
     newMessage: {
@@ -11,18 +9,44 @@ module.exports = {
         (_, args, context) => context.pubsub.asyncIterator([NEW_MESSAGE]),
         (payload, variables) => {
           // Only subscribe to messages from the room you are currently in
-          return payload.newMessage.roomId === variables.input.roomId;
+          return payload.newMessage.room === variables.input.roomId;
         },
       ),
     },
   },
   Query: {},
   Mutation: {
-    sendMessage: (_, args, context) => {
-      const newMessage = { ...args.input, id: `${Math.random()}` };
-      messages.push(newMessage);
-      context.pubsub.publish(NEW_MESSAGE, { newMessage });
-      return newMessage;
+    sendMessage: async (_, { input }, { prisma, pubsub }) => {
+      const newMessage = {
+        // 👇🏽 add roomId to the return for this resolver, so we can acess room id on subscription
+        room: input.roomId,
+        user: input.userId,
+        content: input.content,
+      };
+      const message = await prisma.message.create({
+        data: newMessage,
+      });
+      console.log({ message });
+      pubsub.publish(NEW_MESSAGE, { newMessage: message });
+      return message;
+    },
+  },
+  Message: {
+    room: async (obj, _, { prisma }) => {
+      const room = await prisma.room.findOne({
+        where: {
+          id: obj.room,
+        },
+      });
+      return room;
+    },
+    user: async (obj, _, { prisma }) => {
+      const user = await prisma.user.findOne({
+        where: {
+          id: obj.user,
+        },
+      });
+      return user;
     },
   },
 };

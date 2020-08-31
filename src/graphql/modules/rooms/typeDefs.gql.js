@@ -3,12 +3,19 @@ const { gql } = require('apollo-server');
 module.exports = gql`
   type Room {
     id: ID!
-    users: [User]!
-    messages: [Message]!
+    createdAt: String!
+  }
+
+  input RoomByIdInput {
+    id: String!
   }
 
   type Query {
-    room: Room
+    room(input: RoomByIdInput!): Room
     rooms: [Room]!
+  }
+
+  type Mutation {
+    createRoom: Room!
   }
 `;

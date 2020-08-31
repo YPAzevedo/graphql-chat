@@ -1,29 +1,46 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const users = [];
-
 module.exports = {
   Query: {
-    user: (_, args) => users.find(user => user.id === args.id),
-    users: () => users,
+    user: async (_, { input }, context) => {
+      const user = await context.prisma.user.findOne({
+        where: {
+          id: input.id,
+        },
+      });
+
+      return user;
+    },
+
+    users: async (_, __, context) => {
+      const users = await context.prisma.user.findMany();
+
+      return users;
+    },
   },
   Mutation: {
-    signupUser: (_, args) => {
+    signupUser: async (_, { input }, { prisma }) => {
       const newUser = {
-        ...args.input,
-        id: `${Math.random()}`,
-        password: bcrypt.hashSync(args.input.password, 3),
+        ...input,
+        password: bcrypt.hashSync(input.password, 3),
       };
-      users.push(newUser);
+      await prisma.user.create({
+        data: newUser,
+      });
       return { token: jwt.sign(newUser, 'secret') };
     },
-    loginUser: (_, args) => {
-      const user = users.find(_user => _user.email === args.input.email);
+
+    loginUser: async (_, { input }, { prisma }) => {
+      const user = await prisma.user.findOne({
+        where: {
+          email: input.email,
+        },
+      });
       if (!user) {
         throw Error('Incorrect Email/Password');
       }
-      const isMatch = bcrypt.compareSync(args.input.password, user.password);
+      const isMatch = bcrypt.compareSync(input.password, user.password);
       if (!isMatch) {
         throw Error('Incorrect Email/Password');
       }
