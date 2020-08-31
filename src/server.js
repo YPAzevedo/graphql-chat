@@ -1,10 +1,13 @@
 const { ApolloServer, PubSub } = require('apollo-server');
+const { PrismaClient } = require('@prisma/client');
 const jwt = require('jsonwebtoken');
 
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
 
 function startServer() {
+  const prisma = new PrismaClient();
+
   const pubsub = new PubSub();
   // The ApolloServer constructor requires two parameters: your schema
   // definition and your set of resolvers.
@@ -19,6 +22,7 @@ function startServer() {
       return {
         user,
         pubsub,
+        prisma,
       };
     },
     subscriptions: {

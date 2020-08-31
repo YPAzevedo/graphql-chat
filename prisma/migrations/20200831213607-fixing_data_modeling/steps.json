@@ -1,0 +1,27 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "UpdateField",
+      "model": "Message",
+      "field": "user",
+      "type": "String"
+    },
+    {
+      "tag": "UpdateField",
+      "model": "Message",
+      "field": "room",
+      "type": "String"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Room",
+      "field": "users"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "Room",
+      "field": "messages"
+    }
+  ]
+}
