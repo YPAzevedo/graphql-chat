@@ -1,8 +1,8 @@
-const { ApolloServer, PubSub } = require("apollo-server");
-const jwt = require("jsonwebtoken");
+const { ApolloServer, PubSub } = require('apollo-server');
+const jwt = require('jsonwebtoken');
 
-const typeDefs = require("./typeDefs");
-const resolvers = require("./resolvers");
+const typeDefs = require('./graphql/typeDefs');
+const resolvers = require('./graphql/resolvers');
 
 function startServer() {
   const pubsub = new PubSub();
@@ -13,19 +13,26 @@ function startServer() {
     resolvers,
     context: ({ req }) => {
       const token =
-        req && req.headers.authorization ? req.headers.authorization : "";
-      const user = token ? jwt.verify(token, "secret") : null;
+        req && req.headers.authorization ? req.headers.authorization : '';
+      const user = token ? jwt.verify(token, 'secret') : null;
 
       return {
         user,
         pubsub,
       };
     },
+    subscriptions: {
+      onConnect: () => {
+        // TODO: Implement ws authentication.
+        // https://www.apollographql.com/docs/apollo-server/data/subscriptions/#authentication-over-websocket
+      },
+    },
   });
 
   // The `listen` method launches a web server.
-  server.listen().then(({ url }) => {
-    console.log(`🚀  Server ready at ${url}`);
+  server.listen().then(({ url, subscriptionsUrl }) => {
+    console.log(`🚀  Server ready at ${url}`); // eslint-disable-line
+    console.log(`🚀  Server ready at ${subscriptionsUrl}`); // eslint-disable-line
   });
 }
 

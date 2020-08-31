@@ -1,4 +1,4 @@
-const resolvers = {
+module.exports = {
   Query: {},
   Mutation: {},
 };

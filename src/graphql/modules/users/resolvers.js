@@ -1,5 +1,5 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const users = [];
 
@@ -16,18 +16,18 @@ module.exports = {
         password: bcrypt.hashSync(args.input.password, 3),
       };
       users.push(newUser);
-      return { token: jwt.sign(newUser, "secret") };
+      return { token: jwt.sign(newUser, 'secret') };
     },
     loginUser: (_, args) => {
-      const user = users.find((user) => user.email === args.input.email);
+      const user = users.find((_user) => _user.email === args.input.email);
       if (!user) {
-        throw Error("Incorrect Email/Password");
+        throw Error('Incorrect Email/Password');
       }
       const isMatch = bcrypt.compareSync(args.input.password, user.password);
       if (!isMatch) {
-        throw Error("Incorrect Email/Password");
+        throw Error('Incorrect Email/Password');
       }
-      return { token: jwt.sign(user, "secret") };
-    }
-  }
+      return { token: jwt.sign(user, 'secret') };
+    },
+  },
 };
