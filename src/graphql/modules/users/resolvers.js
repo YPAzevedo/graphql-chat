@@ -5,7 +5,7 @@ const users = [];
 
 module.exports = {
   Query: {
-    user: (_, args) => users.find((user) => user.id === args.id),
+    user: (_, args) => users.find(user => user.id === args.id),
     users: () => users,
   },
   Mutation: {
@@ -19,7 +19,7 @@ module.exports = {
       return { token: jwt.sign(newUser, 'secret') };
     },
     loginUser: (_, args) => {
-      const user = users.find((_user) => _user.email === args.input.email);
+      const user = users.find(_user => _user.email === args.input.email);
       if (!user) {
         throw Error('Incorrect Email/Password');
       }
