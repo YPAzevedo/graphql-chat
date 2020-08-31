@@ -9,6 +9,5 @@
 
 # TODOS
 - Add Primsma 2 SQL Database
-- Move Messages, Rooms and Users to Separate modules
-- Split GraphQL Schema
-- Split resolvers
+- Finish adding all resolvers
+- Finish business logic for Rooms, Messages, Users.
