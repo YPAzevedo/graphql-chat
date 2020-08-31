@@ -13,6 +13,7 @@ module.exports = {
       return rooms;
     },
   },
+
   Mutation: {
     createRoom: async (_, __, { prisma }) => {
       const room = await prisma.room.create({

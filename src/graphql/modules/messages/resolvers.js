@@ -14,7 +14,18 @@ module.exports = {
       ),
     },
   },
-  Query: {},
+
+  Query: {
+    messagesByRoom: async (_, { input }, { prisma }) => {
+      const messages = prisma.message.findMany({
+        where: {
+          room: input.roomId,
+        },
+      });
+      return messages;
+    },
+  },
+
   Mutation: {
     sendMessage: async (_, { input }, { prisma, pubsub }) => {
       const newMessage = {
@@ -26,11 +37,11 @@ module.exports = {
       const message = await prisma.message.create({
         data: newMessage,
       });
-      console.log({ message });
       pubsub.publish(NEW_MESSAGE, { newMessage: message });
       return message;
     },
   },
+
   Message: {
     room: async (obj, _, { prisma }) => {
       const room = await prisma.room.findOne({
@@ -40,6 +51,7 @@ module.exports = {
       });
       return room;
     },
+
     user: async (obj, _, { prisma }) => {
       const user = await prisma.user.findOne({
         where: {

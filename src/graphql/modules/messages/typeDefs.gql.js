@@ -19,9 +19,16 @@ module.exports = gql`
     roomId: String!
   }
 
+  input MessagesByRoomInput {
+    roomId: String!
+  }
+  input MessagesByUserInput {
+    userId: String!
+  }
+
   type Query {
-    messagesByUser: [Message]!
-    messagesByRoom: [Message]!
+    messagesByUser(inpurt: MessagesByUserInput!): [Message]!
+    messagesByRoom(input: MessagesByRoomInput!): [Message]!
   }
 
   type Mutation {

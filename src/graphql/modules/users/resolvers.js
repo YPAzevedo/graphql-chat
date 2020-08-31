@@ -3,8 +3,8 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
   Query: {
-    user: async (_, { input }, context) => {
-      const user = await context.prisma.user.findOne({
+    user: async (_, { input }, { prisma }) => {
+      const user = await prisma.user.findOne({
         where: {
           id: input.id,
         },
@@ -13,8 +13,8 @@ module.exports = {
       return user;
     },
 
-    users: async (_, __, context) => {
-      const users = await context.prisma.user.findMany();
+    users: async (_, __, { prisma }) => {
+      const users = await prisma.user.findMany();
 
       return users;
     },
