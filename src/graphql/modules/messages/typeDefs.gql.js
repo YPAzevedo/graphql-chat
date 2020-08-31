@@ -15,16 +15,20 @@ module.exports = gql`
     content: String!
   }
 
+  input NewMessageSubscriptionInput {
+    roomId: String!
+  }
+
   type Query {
     messagesByUser: [Message]!
     messagesByRoom: [Message]!
   }
 
   type Mutation {
-    sendMessage(input: SendMessageInput): Message!
+    sendMessage(input: SendMessageInput!): Message!
   }
 
   type Subscription {
-    newMessage: Message!
+    newMessage(input: NewMessageSubscriptionInput!): Message!
   }
 `;

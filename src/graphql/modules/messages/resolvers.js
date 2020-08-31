@@ -1,3 +1,5 @@
+const { withFilter } = require('apollo-server');
+
 const { NEW_MESSAGE } = require('../../subscription.channels');
 
 const messages = [];
@@ -5,8 +7,13 @@ const messages = [];
 module.exports = {
   Subscription: {
     newMessage: {
-      subscribe: (_, args, context) =>
-        context.pubsub.asyncIterator([NEW_MESSAGE]),
+      subscribe: withFilter(
+        (_, args, context) => context.pubsub.asyncIterator([NEW_MESSAGE]),
+        (payload, variables) => {
+          // Only subscribe to messages from the room you are currently in
+          return payload.newMessage.roomId === variables.input.roomId;
+        },
+      ),
     },
   },
   Query: {},
