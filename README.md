@@ -6,6 +6,7 @@
 - Apollo Server
 - Nodemon
 - JWT Token
+- GraphQL Tools
 
 # TODOS
 - Add Primsma 2 SQL Database
